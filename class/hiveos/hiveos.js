@@ -21,8 +21,7 @@ class HiveOS {
 		axios
 			.get(url, {
 				headers: {
-					Authorization:
-						"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGkiLCJpYXQiOjE2MjcxNTUxNDgsImV4cCI6MTk0MjUxNTE0OCwibmJmIjoxNjI3MTU1MTQ4LCJqdGkiOjM4MjkzODI0LCJzdWIiOjM4MjkzODI0fQ.uHx0SPaIki4nfIojlPyGquCnvDh0wPjLVAE7syJW4Bw",
+					Authorization: "Bearer " + this.token,
 				},
 			})
 			.then((response) => {
