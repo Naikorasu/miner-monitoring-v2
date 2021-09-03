@@ -1,0 +1,23 @@
+{
+	"name": "miner-monitoring-v2",
+	"version": "0.0.2",
+	"description": "miner-monitoring",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"miner",
+		"monitoring"
+	],
+	"author": "naikorasu",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^0.21.1",
+		"dot-env": "^0.0.1",
+		"esm": "^3.2.25",
+		"fs": "^0.0.1-security",
+		"moment": "^2.29.1",
+		"tty-table": "^4.1.5"
+	}
+}
