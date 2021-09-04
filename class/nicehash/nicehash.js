@@ -6,6 +6,8 @@ import Table from "tty-table";
 var btcPrice = 0;
 var rigDataSet = undefined;
 
+var datafile = "data-nicehash.json";
+
 class Nicehash {
 	constructor({
 		apiHost,
@@ -82,7 +84,7 @@ class Nicehash {
 
 	getData(key) {
 		try {
-			let rawdata = fs.readFileSync("data.json");
+			let rawdata = fs.readFileSync(datafile);
 			let data = JSON.parse(rawdata);
 			//console.log(data[key]);
 			return data[key];
@@ -99,14 +101,14 @@ class Nicehash {
 		//console.log("SETDATA : ", key, value);
 
 		try {
-			let raw = fs.readFileSync("data.json");
+			let raw = fs.readFileSync(datafile);
 			var save = JSON.parse(raw);
 
 			save[key] = value;
 
 			//console.log(save);
 
-			fs.writeFile("data.json", JSON.stringify(save), function (err, data) {
+			fs.writeFile(datafile, JSON.stringify(save), function (err, data) {
 				if (err) {
 					return console.log("ERROR:", err);
 				}
@@ -276,11 +278,11 @@ class Nicehash {
 						align: "right",
 						width: "25%",
 						formatter: function (value) {
-							if (value > 0.00005) {
+							if (value > 0.00004) {
 								return this.style(value, "cyan", "bold");
-							} else if (value > 0.00004) {
-								return this.style(value, "green", "bold");
 							} else if (value > 0.00003) {
+								return this.style(value, "green", "bold");
+							} else if (value > 0.00002) {
 								return this.style(value, "yellow", "bold");
 							} else {
 								return this.style(value, "red", "bold");
