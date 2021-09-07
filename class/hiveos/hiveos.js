@@ -208,10 +208,10 @@ class HiveOS {
 								return this.style(value + " %", "green", "bold");
 							} else if (value > 35) {
 								return this.style(value + " %", "cyan", "bold");
-							} else if (value > 25) {
+							} else if (value > 10) {
 								return this.style(value + " %", "white", "bold");
 							} else {
-								return this.style(value + " %", "magenta", "bold");
+								return this.style(value + " %", "white", "bold");
 							}
 						},
 					},
@@ -231,10 +231,10 @@ class HiveOS {
 								return "\x1b[42m	\x1b[0m";
 							} else if (value > 35) {
 								return "\x1b[46m	\x1b[0m";
-							} else if (value > 25) {
+							} else if (value > 10) {
 								return "\x1b[47m	\x1b[0m";
 							} else {
-								return "\x1b[45m	\x1b[0m";
+								return "\x1b[40m	\x1b[0m";
 							}
 						},
 					},
