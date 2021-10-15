@@ -89,7 +89,8 @@ class Nicehash {
 			//console.log(data[key]);
 			return data[key];
 		} catch (err) {
-			console.log(err);
+			console.log("GET-DATA ERROR");
+			//console.log("ERROR:", err);
 			return null;
 		}
 
@@ -115,6 +116,7 @@ class Nicehash {
 				//console.log(data);
 			});
 		} catch (err) {
+			console.log("SET-DATA ERROR");
 			//console.log("ERROR:", err);
 		}
 		// require("dotenv").config();

@@ -44,7 +44,8 @@ class HiveOS {
 			//console.log(data[key]);
 			return data[key];
 		} catch (err) {
-			console.log("ERROR GET DATA:", err);
+			console.log("GET-DATA ERROR");
+			//console.log("ERROR GET DATA:", err);
 			return null;
 		}
 
@@ -70,8 +71,8 @@ class HiveOS {
 				//console.log(data);
 			});
 		} catch (err) {
+			console.log("SET-DATA ERROR");
 			//console.log("ERROR:", err);
-			console.log("ERROR SET DATA");
 		}
 		// require("dotenv").config();
 		// process.env[param] = data;
@@ -158,7 +159,7 @@ class HiveOS {
 						align: "center",
 						width: "5%",
 						formatter: function (value) {
-							if (value > 60) {
+							if (value > 63) {
 								return this.style(value, "red", "bold");
 							} else if (value > 55) {
 								return this.style(value, "yellow", "bold");
@@ -179,7 +180,7 @@ class HiveOS {
 						align: "center",
 						width: "5%",
 						formatter: function (value) {
-							if (value > 60) {
+							if (value > 63) {
 								return "\x1b[41m	\x1b[0m";
 							} else if (value > 55) {
 								return "\x1b[43m	\x1b[0m";
@@ -202,7 +203,7 @@ class HiveOS {
 						formatter: function (value) {
 							if (value > 65) {
 								return this.style(value + " %", "red", "bold");
-							} else if (value > 55) {
+							} else if (value > 59) {
 								return this.style(value + " %", "yellow", "bold");
 							} else if (value > 45) {
 								return this.style(value + " %", "green", "bold");
@@ -225,7 +226,7 @@ class HiveOS {
 						formatter: function (value) {
 							if (value > 65) {
 								return "\x1b[41m	\x1b[0m";
-							} else if (value > 55) {
+							} else if (value > 59) {
 								return "\x1b[43m	\x1b[0m";
 							} else if (value > 45) {
 								return "\x1b[42m	\x1b[0m";

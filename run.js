@@ -18,7 +18,7 @@ function doStuff() {
 
 function run() {
 	doStuff();
-	setInterval(doStuff, 27666);
+	setInterval(doStuff, 45666);
 }
 
 run();
