@@ -73,239 +73,262 @@ class HiveOS {
 		} catch (err) {
 			console.log("SET-DATA ERROR");
 			//console.log("ERROR:", err);
+			this.repairData();
 		}
 		// require("dotenv").config();
 		// process.env[param] = data;
 	}
 
+	repairData() {
+		var initData = {
+			BTCUSDT: 0,
+			RIGDATASET: "undefined",
+			GPUDATASET: "undefined",
+		};
+
+		fs.writeFile(datafile, JSON.stringify(initData), function (err, data) {
+			if (err) {
+				return console.log("ERROR REPAIR INITIAL DATA:", datafile, err);
+			}
+			//console.log(data);
+		});
+	}
+
 	tableSet() {
 		gpudataset = this.getData("GPUDATASET");
-
-		var combined = [];
 
 		try {
 			if (gpudataset != undefined || gpudataset != "undefined") {
 				//console.log("GPUDATASET:", gpudataset.data);
 
-				var gpudata = gpudataset.data[0];
+				//var totalRigs = 2;
 
-				//console.log("GPUDATA:", gpudata);
+				var gpudatas = gpudataset.data;
 
-				const gpustats = gpudata.gpu_stats;
-				const gpuinfos = gpudata.gpu_info;
+				gpudatas.forEach((gpudata) => {
+					//console.log("GPUDATA:", gpudata);
 
-				//console.log("STAT:", gpustats);
-				//console.log("INFO:", gpuinfo);
+					const gpustats = gpudata.gpu_stats;
+					const gpuinfos = gpudata.gpu_info;
 
-				var x = 0;
+					//console.log("STAT:", gpustats);
+					//console.log("INFO:", gpuinfo);
 
-				gpustats.forEach((stat) => {
-					//console.log(stat);
-					gpuinfos.forEach((info) => {
-						//console.log(info);
-						if (info.bus_id == stat.bus_id) {
-							//console.log(info.bus_id);
-							var temp = Object.assign({}, info, stat);
-							//console.log(temp);
-							combined.push(temp);
-						}
+					var x = 0;
+
+					var combined = [];
+
+					gpustats.forEach((stat) => {
+						//console.log(stat);
+						gpuinfos.forEach((info) => {
+							//console.log(info);
+							if (info.bus_id == stat.bus_id) {
+								//console.log(info.bus_id);
+								var temp = Object.assign({}, info, stat);
+								//console.log(temp);
+								combined.push(temp);
+							}
+						});
+
+						x++;
 					});
 
-					x++;
-				});
+					//console.log("GPUS:", combined);
 
-				//console.log("GPUS:", combined);
-
-				const o1 = {
-					borderStyle: "solid",
-					borderColor: "white",
-					headerAlign: "center",
-					footerAlign: "right",
-					align: "left",
-					color: "white",
-					truncate: "...",
-					width: "100%",
-				};
-
-				const h1 = [
-					{
-						value: "model",
-						alias: "Model",
-						headerColor: "white",
-						color: "white",
+					const o1 = {
+						borderStyle: "solid",
+						borderColor: "white",
+						headerAlign: "center",
+						footerAlign: "right",
 						align: "left",
-						width: "30%",
-					},
-					{
-						value: "brand",
-						alias: "Chip",
-						headerColor: "white",
 						color: "white",
-						align: "left",
-						width: "10%",
-						formatter: function (value) {
-							if (value == "amd") {
-								return this.style("AMD", "red", "bold");
-							} else if (value == "nvidia") {
-								return this.style("NVIDIA", "green", "bold");
-							}
-						},
-					},
-					{
-						value: "temperature",
-						alias: "Temp",
-						headerColor: "white",
-						color: "white",
-						align: "center",
-						width: "5%",
-						formatter: function (value) {
-							if (value > 63) {
-								return this.style(value, "red", "bold");
-							} else if (value > 55) {
-								return this.style(value, "yellow", "bold");
-							} else if (value > 50) {
-								return this.style(value, "green", "bold");
-							} else if (value > 45) {
-								return this.style(value, "cyan", "bold");
-							} else {
-								return this.style(value, "white", "bold");
-							}
-						},
-					},
-					{
-						value: "stat_temp",
-						alias: "-",
-						headerColor: "white",
-						color: "white",
-						align: "center",
-						width: "5%",
-						formatter: function (value) {
-							if (value > 63) {
-								return "\x1b[41m	\x1b[0m";
-							} else if (value > 55) {
-								return "\x1b[43m	\x1b[0m";
-							} else if (value > 50) {
-								return "\x1b[42m	\x1b[0m";
-							} else if (value > 45) {
-								return "\x1b[46m	\x1b[0m";
-							} else {
-								return "\x1b[107m	\x1b[0m";
-							}
-						},
-					},
-					{
-						value: "fan",
-						alias: "Fan Speed",
-						headerColor: "white",
-						color: "white",
-						align: "right",
-						width: "10%",
-						formatter: function (value) {
-							if (value > 65) {
-								return this.style(value + " %", "red", "bold");
-							} else if (value > 59) {
-								return this.style(value + " %", "yellow", "bold");
-							} else if (value > 45) {
-								return this.style(value + " %", "green", "bold");
-							} else if (value > 35) {
-								return this.style(value + " %", "cyan", "bold");
-							} else if (value > 10) {
-								return this.style(value + " %", "white", "bold");
-							} else {
-								return this.style(value + " %", "white", "bold");
-							}
-						},
-					},
-					{
-						value: "stat_fan",
-						alias: "-",
-						headerColor: "white",
-						color: "white",
-						align: "left",
-						width: "5%",
-						formatter: function (value) {
-							if (value > 65) {
-								return "\x1b[41m	\x1b[0m";
-							} else if (value > 59) {
-								return "\x1b[43m	\x1b[0m";
-							} else if (value > 45) {
-								return "\x1b[42m	\x1b[0m";
-							} else if (value > 35) {
-								return "\x1b[46m	\x1b[0m";
-							} else if (value > 10) {
-								return "\x1b[47m	\x1b[0m";
-							} else {
-								return "\x1b[40m	\x1b[0m";
-							}
-						},
-					},
-					{
-						value: "power",
-						alias: "Power",
-						headerColor: "white",
-						color: "white",
-						align: "right",
-						width: "10%",
-						formatter: function (value) {
-							var show = value + " Watt";
-							return show;
-						},
-					},
-					{
-						value: "hash",
-						alias: "Hashrate",
-						headerColor: "white",
-						color: "white",
-						align: "right",
-						width: "15%",
-						formatter: function (value) {
-							var hr = parseFloat(value / 1024).toFixed(3);
-							return hr + " Mh/s";
-						},
-					},
-				];
-
-				var rows = [];
-
-				for (var x = 0; x < combined.length; x++) {
-					var model = [];
-					model[x] = combined[x].model;
-
-					var brand = [];
-					brand[x] = combined[x].brand;
-
-					var temperature = [];
-					temperature[x] = combined[x].temp;
-
-					var fan = [];
-					fan[x] = combined[x].fan;
-
-					var power = [];
-					power[x] = combined[x].power;
-
-					var hash = [];
-					hash[x] = combined[x].hash;
-
-					var temporary = {
-						model: model[x],
-						brand: brand[x],
-						temperature: temperature[x],
-						stat_temp: temperature[x],
-						fan: fan[x],
-						stat_fan: fan[x],
-						power: power[x],
-						hash: hash[x],
+						truncate: "...",
+						width: "100%",
 					};
 
-					rows.push(temporary);
-				}
+					const h1 = [
+						{
+							value: "model",
+							alias: "Model",
+							headerColor: "white",
+							color: "white",
+							align: "left",
+							width: "30%",
+						},
+						{
+							value: "brand",
+							alias: "Chip",
+							headerColor: "white",
+							color: "white",
+							align: "left",
+							width: "10%",
+							formatter: function (value) {
+								if (value == "amd") {
+									return this.style("AMD", "red", "bold");
+								} else if (value == "nvidia") {
+									return this.style("NVIDIA", "green", "bold");
+								}
+							},
+						},
+						{
+							value: "temperature",
+							alias: "Temp",
+							headerColor: "white",
+							color: "white",
+							align: "center",
+							width: "5%",
+							formatter: function (value) {
+								if (value > 63) {
+									return this.style(value, "red", "bold");
+								} else if (value > 55) {
+									return this.style(value, "yellow", "bold");
+								} else if (value > 50) {
+									return this.style(value, "green", "bold");
+								} else if (value > 45) {
+									return this.style(value, "cyan", "bold");
+								} else {
+									return this.style(value, "white", "bold");
+								}
+							},
+						},
+						{
+							value: "stat_temp",
+							alias: "-",
+							headerColor: "white",
+							color: "white",
+							align: "center",
+							width: "5%",
+							formatter: function (value) {
+								if (value > 63) {
+									return "\x1b[41m	\x1b[0m";
+								} else if (value > 55) {
+									return "\x1b[43m	\x1b[0m";
+								} else if (value > 50) {
+									return "\x1b[42m	\x1b[0m";
+								} else if (value > 45) {
+									return "\x1b[46m	\x1b[0m";
+								} else {
+									return "\x1b[107m	\x1b[0m";
+								}
+							},
+						},
+						{
+							value: "fan",
+							alias: "Fan Speed",
+							headerColor: "white",
+							color: "white",
+							align: "right",
+							width: "10%",
+							formatter: function (value) {
+								if (value > 65) {
+									return this.style(value + " %", "red", "bold");
+								} else if (value > 59) {
+									return this.style(value + " %", "yellow", "bold");
+								} else if (value > 45) {
+									return this.style(value + " %", "green", "bold");
+								} else if (value > 35) {
+									return this.style(value + " %", "cyan", "bold");
+								} else if (value > 10) {
+									return this.style(value + " %", "white", "bold");
+								} else {
+									return this.style(value + " %", "white", "bold");
+								}
+							},
+						},
+						{
+							value: "stat_fan",
+							alias: "-",
+							headerColor: "white",
+							color: "white",
+							align: "left",
+							width: "5%",
+							formatter: function (value) {
+								if (value > 65) {
+									return "\x1b[41m	\x1b[0m";
+								} else if (value > 59) {
+									return "\x1b[43m	\x1b[0m";
+								} else if (value > 45) {
+									return "\x1b[42m	\x1b[0m";
+								} else if (value > 35) {
+									return "\x1b[46m	\x1b[0m";
+								} else if (value > 10) {
+									return "\x1b[47m	\x1b[0m";
+								} else {
+									return "\x1b[40m	\x1b[0m";
+								}
+							},
+						},
+						{
+							value: "power",
+							alias: "Power",
+							headerColor: "white",
+							color: "white",
+							align: "right",
+							width: "10%",
+							formatter: function (value) {
+								var show = value + " Watt";
+								return show;
+							},
+						},
+						{
+							value: "hash",
+							alias: "Hashrate",
+							headerColor: "white",
+							color: "white",
+							align: "right",
+							width: "15%",
+							formatter: function (value) {
+								var hr = parseFloat(value / 1000).toFixed(3);
+								return hr + " Mh/s";
+							},
+						},
+					];
 
-				try {
-					const t1 = Table(h1, rows, o1).render();
-					console.log(t1);
-				} catch (err) {
-					console.log("ERROR:", err);
-				}
+					var rows = [];
+
+					for (var x = 0; x < combined.length; x++) {
+						var model = [];
+						model[x] = combined[x].model;
+
+						var brand = [];
+						brand[x] = combined[x].brand;
+
+						var temperature = [];
+						temperature[x] = combined[x].temp;
+
+						var fan = [];
+						fan[x] = combined[x].fan;
+
+						var power = [];
+						power[x] = combined[x].power;
+
+						var hash = [];
+						hash[x] = combined[x].hash;
+
+						var temporary = {
+							model: model[x],
+							brand: brand[x],
+							temperature: temperature[x],
+							stat_temp: temperature[x],
+							fan: fan[x],
+							stat_fan: fan[x],
+							power: power[x],
+							hash: hash[x],
+						};
+
+						rows.push(temporary);
+					}
+
+					try {
+						const t1 = Table(h1, rows, o1).render();
+						console.log(t1);
+					} catch (err) {
+						console.log("ERROR:", err);
+					}
+				});
+
+				//var gpudata = gpudataset.data[0];
+				//console.log("GPUDATA:", gpudata);
 			}
 		} catch (err) {
 			console.log("ERROR:", err);

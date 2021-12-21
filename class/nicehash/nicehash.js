@@ -118,9 +118,26 @@ class Nicehash {
 		} catch (err) {
 			console.log("SET-DATA ERROR");
 			//console.log("ERROR:", err);
+
+			this.repairData();
 		}
 		// require("dotenv").config();
 		// process.env[param] = data;
+	}
+
+	repairData() {
+		var initData = {
+			BTCUSDT: 0,
+			RIGDATASET: "undefined",
+			GPUDATASET: "undefined",
+		};
+
+		fs.writeFile(datafile, JSON.stringify(initData), function (err, data) {
+			if (err) {
+				return console.log("ERROR REPAIR INITIAL DATA:", datafile, err);
+			}
+			//console.log(data);
+		});
 	}
 
 	tableSet() {
